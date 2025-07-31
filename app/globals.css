@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a; /* deep black */
+  --foreground: #ededed; /* off-white */
 }
 
 @theme inline {
@@ -20,7 +20,57 @@
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Noise texture overlay (subtle grain for depth) */
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg width='100' height='100' xmlns='http://www.w3.org/2000/svg'><filter id='noise'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23noise)' opacity='0.03'/></svg>");
+  z-index: 0;
+}
+
+/* Starry background */
+.bg-starry {
+  position: relative;
+  background-color: var(--background);
+
+  /* Two layers of white dots, offset to form a grid */
+  background-image:
+    radial-gradient(white 1.2px, transparent 1.3px),
+    radial-gradient(white 1.2px, transparent 1.3px);
+
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  z-index: 1;
+}
+
+/* Optional: subtle twinkle animation */
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.bg-starry::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(white 1.2px, transparent 1.3px),
+    radial-gradient(white 1.2px, transparent 1.3px);
+  background-size: 40px 40px;
+  background-position: 10px 10px, 30px 30px;
+  animation: twinkle 4s infinite ease-in-out alternate;
+  opacity: 0.7;
+  z-index: 2;
 }
